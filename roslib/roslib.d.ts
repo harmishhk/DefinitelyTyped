@@ -10,6 +10,8 @@
 
  ---------------------------------- */
 
+ /// <reference path="../rosmsgs/rosmsgs.d.ts" />
+
 declare namespace ROSLIB {
 	export class Ros {
         /**
@@ -31,7 +33,7 @@ declare namespace ROSLIB {
          */
 		constructor(options:{
 			url?: string,
-            groovyCompatibility: boolean = true,
+            groovyCompatibility?: boolean,
             transportLibrary?: string,
             transportOptions?: any
 		});
@@ -259,7 +261,7 @@ declare namespace ROSLIB {
          * @param callback - function with the following params:
          *   * message - the published message
          */
-		advertise(callback: (message: Message) => void): void;
+		advertise(callback: (request: any, response: any) => void): void;
 
 		/**
 		 * Unadvertise a previously advertised service
@@ -448,6 +450,9 @@ declare namespace ROSLIB {
             serverName?: string,
             repubServiceName?: string
         });
+
+        //getter
+        public fixedFrame: string;
 
         /**
          * Process the service response and subscribe to the tf republisher
@@ -768,28 +773,6 @@ declare namespace ROSLIB {
         constructor(options: {
             xml: XMLDocument
         });
-    }
-}
-
-declare namespace GeometryMsgs {
-    export interface TransformStamped extends ROSLIB.Message {
-        header: StdMsgs.Header;
-        child_frame_id: string;
-        transform: ROSLIB.Transform;
-    }
-}
-
-declare namespace StdMsgs {
-    export interface Header extends ROSLIB.Message {
-        seq: number;
-        stamp: {secs : number, nsecs : number};
-        frame_id: string;
-    }
-}
-
-declare namespace TFWebRepublisher {
-    export interface TFArray extends ROSLIB.Message {
-        transforms: GeometryMsgs.TransformStamped[];
     }
 }
 

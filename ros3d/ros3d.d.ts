@@ -169,7 +169,7 @@ declare namespace ROS3D {
         stopStream(): void;
     }
 
-    export class Grid {
+    export class Grid extends THREE.Object3D {
         /**
          * Create a grid object.
          *
@@ -180,7 +180,7 @@ declare namespace ROS3D {
          *  * lineWidth (optional) - the width of the lines in the grid
          *  * cellSize (optional) - The length, in meters, of the side of each cell
          */
-        constructor(options: {
+        constructor(options?: {
             num_cells?: number,
             color?: THREE.Color,
             lineWidth?: number,
@@ -753,7 +753,7 @@ declare namespace ROS3D {
 
     }
 
-    export class OccupancyGrid {
+    export class OccupancyGrid extends THREE.Mesh {
         /**
          * An OccupancyGrid can convert a ROS occupancy grid message into a THREE object.
          *
@@ -798,7 +798,9 @@ declare namespace ROS3D {
             offsetPose?: ROSLIB.Pose,
             color?: THREE.Color,
             opacity?: number
-		});
+		    });
+
+        currentGrid: ROS3D.OccupancyGrid;
     }
 
     export class Odometry {
@@ -908,7 +910,7 @@ declare namespace ROS3D {
         zoomOut(zoomScale: number): void;
     }
 
-    export class Path {
+    export class Path extends THREE.Object3D {
         /**
          * A Path client that listens to a given topic and displays a line connecting the poses.
          *
@@ -1080,7 +1082,7 @@ declare namespace ROS3D {
         });
     }
 
-    export class SceneNode {
+    export class SceneNode extends THREE.Object3D {
         /**
          * A SceneNode can be used to keep track of a 3D object with respect to a ROS frame within a scene.
          *
@@ -1098,12 +1100,18 @@ declare namespace ROS3D {
             object: THREE.Object3D
         });
 
+        // getter
+        public frameID: string;
+        public object: THREE.Object3D;
+
         /**
          * Set the pose of the associated model.
          *
          * @param pose - the pose to update with
          */
         updatePose(pose: ROSLIB.Pose): void;
+
+        unsubscribeTf(): void;
     }
 
     export class TriangleList {
@@ -1131,7 +1139,7 @@ declare namespace ROS3D {
         setColor(hex: string): void;
     }
 
-    export class URDF {
+    export class Urdf {
         /**
          * A URDF can be used to load a ROSLIB.UrdfModel and its associated models into a 3D object.
          *
@@ -1154,7 +1162,7 @@ declare namespace ROS3D {
         });
     }
 
-    export class URDFClient {
+    export class UrdfClient {
         /**
          * A URDF client can be used to load a URDF and its associated models into a 3D object from the ROS
          * parameter server.
@@ -1197,7 +1205,7 @@ declare namespace ROS3D {
          *   * background (optional) - the color to render the background, like '#efefef'
          *   * antialias (optional) - if antialiasing should be used
          *   * intensity (optional) - the lighting intensity setting to use
-         *   * cameraPosition (optional) - the starting position of the camera, possible keys include:
+         *   * cameraPose  (optional) - the starting position of the camera, possible keys include:
          *      * x - x-coordinate
          *      * y - y-coordinate
          *      * z - z-coordinate
@@ -1209,7 +1217,7 @@ declare namespace ROS3D {
             background?: string,
             antialias?: boolean,
             intensity?: number,
-                    cameraPosition?: {
+            cameraPose ?: {
                 x: number,
                 y: number,
                 z: number

@@ -84,8 +84,7 @@ var addTwoInts = new ROSLIB.Service({
 });
 
 addTwoInts.advertise((req, resp) => {
-	resp.sum = req.a + req.b
-	return true;
+	resp.sum = req.a + req.b;
 });
 
 // Getting and setting a param value
